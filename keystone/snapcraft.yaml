@@ -17,8 +17,9 @@ apps:
     daemon: simple
     plugs:
       - network
+      - network-bind
   manage:
-    command: keystone-manage
+    command: bin/run keystone-manage
     plugs:
       - network
 
@@ -44,16 +45,21 @@ parts:
     python-version: python2
     source: http://tarballs.openstack.org/keystone/keystone-stable-mitaka.tar.gz
     python-packages:
-        - pymysql
-        - uwsgi
+      - pymysql
+      - uwsgi
     constraints: https://raw.githubusercontent.com/openstack/requirements/stable/mitaka/upper-constraints.txt
     build-packages:
-        - libffi-dev
-        - libssl-dev
-        - pkg-config
+      - libffi-dev
+      - libssl-dev
+      - pkg-config
     stage-packages:
-        - apache2
-        - libapache2-mod-proxy-uwsgi
+      - apache2
+      - libapache2-mod-proxy-uwsgi
+    organize:
+      etc/keystone.conf.sample: etc/keystone/keystone.conf.sample
+      etc/policy.json: etc/keystone/policy.json
+      etc/keystone-paste.ini: etc/keystone/keystone-paste.ini
+      etc/policy.v3cloudsample.json: etc/keystone/keystone-paste.ini
   config:
     after:
       - keystone
