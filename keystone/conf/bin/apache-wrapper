@@ -1,0 +1,6 @@
+#!/bin/bash -e
+
+export APACHE_HTTPD=${SNAP}/usr/sbin/apache2
+export APACHE_CONFDIR=${SNAP}/etc/apache2
+# ${SNAP}/usr/sbin/a2enmod mpm_prefork
+exec ${SNAP}/usr/sbin/apachectl $1

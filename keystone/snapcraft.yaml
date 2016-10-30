@@ -6,6 +6,12 @@ confinement: strict
 grade: devel
 
 apps:
+  apache:
+    command: bin/apache-wrapper start
+    stop-command: bin/apache-wrapper stop
+    daemon: simple
+    plugs:
+      - network
   uwsgi:
     command: bin/apache-uwsgi
     daemon: simple
@@ -17,6 +23,22 @@ apps:
       - network
 
 parts:
+  apache:
+    plugin: autotools
+    source: http://mirrors.hostingromania.ro/apache.org/httpd/httpd-2.4.23.tar.gz
+#    configflags: [--enable-pie, --enable-mpms-shared=all, --enable-mods-shared="all cgi ident authnz_fcgi", --enable-mods-static="unixd logio watchdog version"]
+#    configflags: [--enable-pie, --enable-mpms-shared=all, --enable-mods-shared=all, --enable-mods-static="unixd logio watchdog version", --enable-proxy, --enable-proxy-connect, --enable-proxy-http, --enable-rewrite, --enable-ssl]
+    configflags: ['--enable-mpms-shared=all', '--enable-pie', '--enable-proxy', '--enable-proxy-connect', '--enable-proxy-http', '--enable-rewrite', '--enable-ssl']
+    stage-packages:
+      # Apache dependencies
+      - libapr1
+      - libaprutil1
+      - libpcre3
+    build-packages:
+      # Apache dependencies
+      - libapr1-dev
+      - libaprutil1-dev
+      - libpcre3-dev
   keystone:
     plugin: python
     python-version: python2
